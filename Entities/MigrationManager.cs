@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using LoggerService;
 
 namespace Entities
 {
@@ -11,19 +12,20 @@ namespace Entities
     {
         public static IHost MigrateDatabase(this IHost host)
         {
+            LoggerManager logger = new LoggerManager();
             using (var scope = host.Services.CreateScope())
             {
                 using (var appContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>())
                 {
-                    //try
-                    //{
+                    try
+                    {
                         appContext.Database.Migrate();
-                    //}
-                    //catch (Exception ex)
-                    //{
-                        
-                    //    throw new Exception(ex.StackTrace);
-                    //}
+                    }
+                    catch (Exception ex)
+                    {
+
+                        logger.LogError(ex.StackTrace);
+                    }
                 }
             }
             return host;

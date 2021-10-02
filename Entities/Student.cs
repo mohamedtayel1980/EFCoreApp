@@ -21,5 +21,7 @@ namespace Entities
         public int LocalCalculation { get; set; }
 
         public bool IsRegularStudent { get; set; }
+
+        public StudentDetails StudentDetails { get; set; }
     }
 }
