@@ -23,5 +23,6 @@ namespace Entities
         public bool IsRegularStudent { get; set; }
 
         public StudentDetails StudentDetails { get; set; }
+        public ICollection<Evaluation> Evaluations { get; set; }
     }
 }

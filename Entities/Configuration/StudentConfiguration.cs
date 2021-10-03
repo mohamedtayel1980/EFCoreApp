@@ -15,6 +15,9 @@ namespace Entities.Configuration
                 .IsRequired(false);
             builder.Property(s => s.IsRegularStudent)
                 .HasDefaultValue(true);
+            builder.HasMany(e => e.Evaluations)
+                   .WithOne(s => s.Student)
+                   .HasForeignKey(s => s.StudentId);
             builder.HasData
             (
                 new Student
