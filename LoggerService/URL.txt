@@ -7,3 +7,4 @@ https://code-maze.com/async-generic-repository-pattern/
 https://code-maze.com/net-core-web-development-part4/
 https://code-maze.com/c-tips-to-improve-code-quality-and-performance/
 https://code-maze.com/net-core-series/
+https://carldesouza.com/swagger-error-ambiguous-http-method-for-action-and-failed-to-load-api-definition/

@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace EFCoreApp.Controllers
 {
@@ -39,23 +41,31 @@ namespace EFCoreApp.Controllers
 
             return Ok(students);
         }
-        //[HttpPost]
-        //public IActionResult AllStudents()
-        //{
+        [HttpGet]
+        [Route("GetAllStudents")]
+        [SwaggerOperation("GetAllStudents")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public IActionResult AllStudents()
+        {
 
-        //    var students = _context.Students
-        //                    .Select(s => new StudentDto
-        //                    {
-        //                        Name = s.Name,
-        //                        Age = s.Age,
-        //                        NumberOfEvaluations = s.Evaluations.Count
-        //                    })
-        //                    .ToList();
+            var students = _context.Students
+                            .Select(s => new StudentDto
+                            {
+                                Name = s.Name,
+                                Age = s.Age,
+                                NumberOfEvaluations = s.Evaluations.Count
+                            })
+                            .ToList();
 
-        //    return Ok(students);
-        //}
-        [HttpPost]
-        public IActionResult StudentWithEvalutionConcated(int id = 0)
+            return Ok(students);
+        }
+        [HttpGet]
+        [Route("StudentWithEvalution")]
+        [SwaggerOperation("StudentWithEvalution")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public IActionResult StudentWithEvalutionConcated()
         {
 
             var students = _context.Students
@@ -69,6 +79,54 @@ namespace EFCoreApp.Controllers
                             .ToList();
 
             return Ok(students);
+        }
+        [HttpGet]
+        [Route("FromSqlRawSample")]
+        [SwaggerOperation("FromSqlRawSample")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public IActionResult FromSqlRawSample()
+        {
+
+            var student = _context.Students
+     .FromSqlRaw(@"SELECT * FROM Student WHERE Name = {0}", "John Doe")
+     .Include(e => e.Evaluations)
+     .FirstOrDefault();
+
+            return Ok(student);
+        }
+        [HttpGet]
+        [Route("ExecuteSqlRawSample")]
+        [SwaggerOperation("ExecuteSqlRawSample")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public IActionResult ExecuteSqlRawSample()
+        {
+
+            var rowsAffected = _context.Database
+    .ExecuteSqlRaw(
+        @"UPDATE Student
+          SET Age = {0} 
+          WHERE Name = {1}", 29, "Mike Miles");
+            return Ok(new { RowsAffected = rowsAffected });
+        }
+        [HttpGet]
+        [Route("ReloadSample")]
+        [SwaggerOperation("ReloadSample")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public IActionResult ReloadSample()
+        {
+
+            var studentForUpdate = _context.Students
+     .FirstOrDefault(s => s.Name.Equals("Mike Miles"));
+            var age = 27;
+            var rowsAffected = _context.Database
+    .ExecuteSqlRaw(@"UPDATE Student 
+                       SET Age = {0} 
+                       WHERE Name = {1}", age, studentForUpdate.Name);
+            _context.Entry(studentForUpdate).Reload();
+            return Ok(new { RowsAffected = rowsAffected });
         }
     }
 }
