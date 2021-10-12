@@ -128,5 +128,71 @@ namespace EFCoreApp.Controllers
             _context.Entry(studentForUpdate).Reload();
             return Ok(new { RowsAffected = rowsAffected });
         }
+
+        [HttpPost]
+        [Route("SaveStudent")]
+        [SwaggerOperation("SaveStudent")]
+        [SwaggerResponse((int)HttpStatusCode.Created)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public IActionResult SaveStudent([FromBody] Student student)
+        {
+            if (student == null)
+                return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest();
+            _context.Add(student);
+            _context.SaveChanges();
+            return Created("URI of the created entity", student);
+        }
+        [HttpPost]
+        [Route("SaveStudentTracking")]
+        [SwaggerOperation("SaveStudentTracking")]
+        [SwaggerResponse((int)HttpStatusCode.Created)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public IActionResult SaveStudentTracking([FromBody] Student student)
+        {
+            if (student == null)
+                return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest();
+            var stateBeforeAdd = _context.Entry(student).State;
+            _context.Add(student);
+            var stateAfterAdd = _context.Entry(student).State;
+            _context.SaveChanges();
+            var stateAfterSaveChanges = _context.Entry(student).State;
+            return Created("URI of the created entity", student);
+        }
+        [HttpPost]
+        [Route("SaveStudentDetails")]
+        [SwaggerOperation("SaveStudentDetails")]
+        [SwaggerResponse((int)HttpStatusCode.Created)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public IActionResult SaveStudentDetails([FromBody] Student student)
+        {
+            student.StudentDetails = new StudentDetails
+            {
+                Address = "Added Address",
+                AdditionalInformation = "Additional information added"
+            };
+            _context.Add(student);
+            _context.SaveChanges();
+            return Created("URI of the created entity", student);
+        }
+        [HttpPut("{id}")]
+        [Route("UpdateStudent")]
+        [SwaggerOperation("UpdateStudent")]
+        [SwaggerResponse((int)HttpStatusCode.NoContent)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public IActionResult UpdateStudent(Guid id, [FromBody] Student student)
+        {
+            var dbStudent = _context.Students
+                .FirstOrDefault(s => s.StudentId.Equals(id));
+            if (dbStudent == null) return BadRequest();
+            dbStudent.Age = student.Age;
+            dbStudent.Name = student.Name;
+            dbStudent.IsRegularStudent = student.IsRegularStudent;
+            _context.SaveChanges();
+            return NoContent();
+        }
     }
 }
