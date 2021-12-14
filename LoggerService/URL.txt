@@ -2,3 +2,9 @@
 https://code-maze.com/configuring-nonrelational-properties/
 https://code-maze.com/efcore-relationships/
 https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/projects?tabs=vs
+https://code-maze.com/testing-mvc-controllers-asp-net-core/
+https://code-maze.com/async-generic-repository-pattern/
+https://code-maze.com/net-core-web-development-part4/
+https://code-maze.com/c-tips-to-improve-code-quality-and-performance/
+https://code-maze.com/net-core-series/
+https://carldesouza.com/swagger-error-ambiguous-http-method-for-action-and-failed-to-load-api-definition/
